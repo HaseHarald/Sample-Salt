@@ -1,0 +1,28 @@
+# This file contains a list of all files that should not be versioned by git.
+# All lines beginning with # are comments and will be ignored.
+
+# except this file
+!.gitignore
+
+#=============================================================================
+# Generic files to ignore
+# backup files (*~) and vim swap file (.swp), MacOS dir file (.DS_Store)
+*~
+*.lock
+*.DS_Store
+.*.swp
+*.out
+*.dia.autosave
+
+#=============================================================================
+# IDE files to ignore
+# (Netbeans, Eclipse)
+nbproject/private/
+.classpath
+.project
+.settings
+
+# Geany
+*.geany
+#=============================================================================
+
