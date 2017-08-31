@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
 # Reset policys
 /sbin/iptables -t filter -P INPUT ACCEPT
 /sbin/iptables -t filter -P OUTPUT ACCEPT
