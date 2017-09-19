@@ -1,0 +1,10 @@
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+# Disable IPv6 on all interfaces.
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+{% for iface in ifaces -%}
+net.ipv6.conf.{{iface}}.disable_ipv6 = 1
+{% endfor %}
