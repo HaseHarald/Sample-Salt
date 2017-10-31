@@ -51,7 +51,7 @@ pkg-rdate:
 {%   endif %}
 
 {% else %}
-notification-ssh-server:
+notification-rdate:
   test.show_notification:
     - text: {{ 'You can define pillar data for this state, for more informations read the example comment for this state in %s.' % sls }}
 {% endif %}
