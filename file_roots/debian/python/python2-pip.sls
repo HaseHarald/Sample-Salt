@@ -36,5 +36,5 @@ notification-python-pip:
 # python-pip:
 #   pillar_version: '0.0.1'
 #   install:
-#     - scapy
-#     - freeopcua
+#     - SomeProject
+#     - SomeOtherProject

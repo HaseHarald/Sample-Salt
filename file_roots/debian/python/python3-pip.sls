@@ -31,7 +31,7 @@ pip3-install_{{ module }}:
     - require:
       - cmd: upgrade_pip3
       - pkg: pkgs_python3-pip
-      - sls: mint_18-2.dev-tools.python2-pip
+      - sls: debian.python.python2-pip
 {%     endfor %}
 {%   endif %}
 {% else %}
@@ -45,5 +45,5 @@ notification-python3-pip:
 # python3-pip:
 #   pillar_version: '0.0.1'
 #   install:
-#     - scapy
-#     - freeopcua
+#     - SomeProject
+#     - SomeOtherProject
