@@ -1,0 +1,1 @@
+../../debian/xfce/xfce4-panel.sls
