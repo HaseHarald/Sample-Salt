@@ -31,7 +31,7 @@ pip3-install_{{ module }}:
     - require:
       - cmd: upgrade_pip3
       - pkg: pkgs_python3-pip
-      - sls: mint_18.2.python.python2-pip
+      - sls: mint_18-2.python.python2-pip
 {%     endfor %}
 {%   endif %}
 {% else %}
