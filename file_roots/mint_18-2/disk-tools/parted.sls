@@ -1,0 +1,1 @@
+../../debian/disk-tools/parted.sls
