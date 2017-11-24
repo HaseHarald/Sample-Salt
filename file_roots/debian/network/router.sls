@@ -40,7 +40,7 @@ nat-on-{{ iface }}:
 {%   endif %}
 {% else %}
 
-notification-ssh-server:
+notification-ip-route:
   test.show_notification:
     - text: {{ 'You can define pillar data for this state, for more informations read the example comment for this state in %s.' % sls }}
 
