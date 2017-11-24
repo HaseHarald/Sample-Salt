@@ -14,3 +14,6 @@
 
 # Delete user defined chains
 /sbin/iptables -t filter -X
+
+# Write to log. Might be helpfull for debuging.
+/usr/bin/logger -t "IPTABLES-RESET" -- "IPTABLES has been reset by $0"
