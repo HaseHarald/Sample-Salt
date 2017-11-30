@@ -35,4 +35,4 @@ pkg_docker-engine:
     - require:
       - pkgrepo: pkgrepo_docker
 
-{% include "mint_18-2/etckeeper/commit.sls" %}
+{% include "debian/etckeeper/commit.sls" %}
