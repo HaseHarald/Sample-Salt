@@ -1,6 +1,6 @@
 #rdate - set the system's date from a remote host
 
-{% set state_version = '0.0.1' %}
+{% set state_version = '0.0.2' %}
 {% if pillar['rdate'] is defined %}
 {%   set pillar_version = pillar['rdate'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -14,8 +14,6 @@ pkg-rdate:
   pkg.installed:
     - name: rdate
 
-{% if pillar['rdate'] is defined %}
-{%   if pillar['rdate']['server'] is defined %}
 /etc/cron.d/rdate:
   file.managed:
     - name: /etc/cron.d/rdate
@@ -31,7 +29,10 @@ pkg-rdate:
       dom: '*'
       mon: '*'
       dow: '*'
+      server: 'ptbtime1.ptb.de'
     - context:
+{% if pillar['rdate'] is defined %}
+{%   if pillar['rdate']['server'] is defined %}
 {%     if pillar['rdate']['minute'] is defined %}
       minute: {{ pillar['rdate']['minute'] }}
 {%     endif %}
@@ -60,6 +61,9 @@ notification-rdate:
 
 # Pillar Example
 # --------------
+# This pillar basicly sets up a cron-job, that gets the current date and time
+# from the given server at the given time.
+# The entire pillar and all values are optional.
 # rdate:
 #   pillar_version: '0.0.1'
 #   minute: 42
