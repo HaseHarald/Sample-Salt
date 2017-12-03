@@ -1,6 +1,6 @@
 # Manage user-accounts
 
-{% set state_version = '0.0.2' %}
+{% set state_version = '0.0.4' %}
 {% if pillar['users'] is defined %}
 {%   set pillar_version = pillar['users'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -12,40 +12,48 @@
 
 {% if pillar['users'] is defined %}
 
-{%   for user, args in pillar['users'].iteritems() if not user == 'pillar_version' %}
+{%   for user in pillar['users'] if not user == 'pillar_version' %}
 user_{{ user }}:
   user.present:
     - name: {{ user }}
-{%     if 'home' in args %}
-    - home: {{ args['home'] }}
-{%   endif %}
-{%     if 'shell' in args %}
-    - shell: {{ args['shell'] }}
+{%     if 'home' in user %}
+    - home: {{ user['home'] }}
+{%     endif %}
+{%     if 'shell' in user %}
+    - shell: {{ user['shell'] }}
 {%     else %}
     - shell: /bin/false
 {%     endif %}
-{%     if 'uid' in args %}
-    - uid: {{ args['uid'] }}
+{%     if 'uid' in user %}
+    - uid: {{ user['uid'] }}
 {%     endif %}
-{%     if 'gid' in args %}
-    - gid: {{ args['gid'] }}
+{%     if 'gid' in user %}
+    - gid: {{ user['gid'] }}
 {%     else %}
     - gid_from_name: True
 {%     endif %}
-{%     if 'password' in args %}
-    - password: {{ args['password'] }}
-{%       if 'enforce_password' in args %}
-    - enforce_password: {{ args['enforce_password'] }}
+{%     if 'password' in user %}
+    - password: {{ user['password'] }}
+{%       if 'enforce_password' in user %}
+    - enforce_password: {{ user['enforce_password'] }}
+{%       else %}
+    - enforce_password: False
 {%       endif %}
-{%       if 'hash_password' in args %}
-    - hash_password: {{ args['hash_password'] }}
+{%       if 'hash_password' in user %}
+    - hash_password: {{ user['hash_password'] }}
 {%       endif %}
 {%     endif %}
-{%     if 'fullname' in args %}
-    - fullname: {{ args['fullname'] }}
+{%     if 'fullname' in user %}
+    - fullname: {{ user['fullname'] }}
 {%     endif %}
-{%     if 'groups' in args %}
-    - groups: {{ args['groups'] }}
+{%     if 'groups' in user %}
+    - groups: {{ user['groups'] }}
+{%       if pillar['groups'] is defined %}
+    - require:
+{%         for group in user['groups'] if group in pillar['groups'] %}
+      - group: group_{{ group }}
+{%         endfor %}
+{%       endif %}
 {%     endif %}
 {%   endfor %}
 
@@ -62,18 +70,18 @@ notification-users:
 # --------------
 # users:
 #   pillar_version: '0.0.1'
-#   rms:
-#     fullname: Richard Matthew Stallman
-#     uid: 5000
-#     gid: 5000
-#     shell: /bin/bash
-#     home: /home/rms
-#     groups:
+#   rms:                                  # The user-name that is used for login
+#     fullname: Richard Matthew Stallman  # [optional]
+#     uid: 5000                           # [optional] defaults to system behavior
+#     gid: 5000                           # [optional] defaults to setting a group that is the same as the username
+#     shell: /bin/bash                    # [optional] defaults to /bin/false
+#     home: /home/rms                     # [optional] defaults to system behavior
+#     groups:                             # [optional] list of aditional groups to add the user to
 #       - foobar
 #       - admin
-#     password: TopSecret
-#     hash_password: True
-#     enforce_password: True
+#     password: TopSecret                 # [optional] defaults to empty
+#     hash_password: True                 # [optional] defaults to False. If False keep password as is, usefull if the password string is allready a hash.
+#     enforce_password: True              # [optional] defaults to False. If True override password, even if allready set.
 # 
 #   jbond:
 #     fullname: James Bond
