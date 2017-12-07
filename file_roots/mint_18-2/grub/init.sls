@@ -1,6 +1,6 @@
 #grub - configure grub
 
-{% set state_version = '0.0.3' %}
+{% set state_version = '0.0.4' %}
 {% if pillar['grub'] is defined %}
 {%   set pillar_version = pillar['grub'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -26,12 +26,16 @@
     - context:
 {%   if pillar['grub']['default'] is defined %}
       default: {{ pillar['grub']['default'] | yaml_encode }}
+{%   endif %}
 {%   if pillar['grub']['timeout'] is defined %}
       timeout: {{ pillar['grub']['timeout'] }}
+{%   endif %}
 {%   if pillar['grub']['cmdline_linux_default'] is defined %}
       cmdline_linux_default: {{ pillar['grub']['cmdline_linux_default'] }}
+{%   endif %}
 {%   if pillar['grub']['cmdline_linux'] is defined %}
       cmdline_linux: {{ pillar['grub']['cmdline_linux'] }}
+{%   endif %}
 
 cmd-update-grub:
   cmd.wait:
@@ -39,7 +43,6 @@ cmd-update-grub:
     - name: update-grub
     - watch:
       - file: /etc/default/grub
-{%   endif %}
 
 {% else %}
 notification-grub:

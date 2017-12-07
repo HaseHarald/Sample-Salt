@@ -1,6 +1,6 @@
 #grub - configure grub
 
-{% set state_version = '0.0.3' %}
+{% set state_version = '0.0.4' %}
 {% if pillar['grub'] is defined %}
 {%   set pillar_version = pillar['grub'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -14,24 +14,28 @@
 /etc/default/grub:
   file.managed:
     - name: /etc/default/grub
-    - source: salt://debian/grub/etc/default/grub.jinja
+    - source: salt://mint_18-2/grub/etc/default/grub.jinja
     - template: jinja
     - user: root
     - group: root
     - defaults:
       default: 0
-      timeout: 5
-      cmdline_linux_default: 'quiet'
+      timeout: 10
+      cmdline_linux_default: 'quiet splash'
       cmdline_linux: ''
     - context:
 {%   if pillar['grub']['default'] is defined %}
       default: {{ pillar['grub']['default'] | yaml_encode }}
+{%   endif %}
 {%   if pillar['grub']['timeout'] is defined %}
       timeout: {{ pillar['grub']['timeout'] }}
+{%   endif %}
 {%   if pillar['grub']['cmdline_linux_default'] is defined %}
       cmdline_linux_default: {{ pillar['grub']['cmdline_linux_default'] }}
+{%   endif %}
 {%   if pillar['grub']['cmdline_linux'] is defined %}
       cmdline_linux: {{ pillar['grub']['cmdline_linux'] }}
+{%   endif %}
 
 cmd-update-grub:
   cmd.wait:
@@ -39,7 +43,6 @@ cmd-update-grub:
     - name: update-grub
     - watch:
       - file: /etc/default/grub
-{%   endif %}
 
 {% else %}
 notification-grub:
