@@ -1,6 +1,6 @@
 # Manage user-accounts
 
-{% set state_version = '0.0.4' %}
+{% set state_version = '0.0.5' %}
 {% if pillar['users'] is defined %}
 {%   set pillar_version = pillar['users'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -13,44 +13,45 @@
 {% if pillar['users'] is defined %}
 
 {%   for user in pillar['users'] if not user == 'pillar_version' %}
+{%     set args = pillar['users'][user] %}
 user_{{ user }}:
   user.present:
     - name: {{ user }}
-{%     if 'home' in user %}
-    - home: {{ user['home'] }}
+{%     if args['home'] is defined %}
+    - home: {{ args['home'] }}
 {%     endif %}
-{%     if 'shell' in user %}
-    - shell: {{ user['shell'] }}
+{%     if args['shell'] is defined %}
+    - shell: {{ args['shell'] }}
 {%     else %}
     - shell: /bin/false
 {%     endif %}
-{%     if 'uid' in user %}
-    - uid: {{ user['uid'] }}
+{%     if args['uid'] is defined %}
+    - uid: {{ args['uid'] }}
 {%     endif %}
-{%     if 'gid' in user %}
-    - gid: {{ user['gid'] }}
+{%     if args['gid'] is defined %}
+    - gid: {{ args['gid'] }}
 {%     else %}
     - gid_from_name: True
 {%     endif %}
-{%     if 'password' in user %}
-    - password: {{ user['password'] }}
-{%       if 'enforce_password' in user %}
-    - enforce_password: {{ user['enforce_password'] }}
+{%     if args['password'] is defined %}
+    - password: {{ args['password'] }}
+{%       if args['enforce_password'] is defined %}
+    - enforce_password: {{ args['enforce_password'] }}
 {%       else %}
     - enforce_password: False
 {%       endif %}
-{%       if 'hash_password' in user %}
-    - hash_password: {{ user['hash_password'] }}
+{%       if args['hash_password'] is defined %}
+    - hash_password: {{ args['hash_password'] }}
 {%       endif %}
 {%     endif %}
-{%     if 'fullname' in user %}
-    - fullname: {{ user['fullname'] }}
+{%     if args['fullname'] is defined %}
+    - fullname: {{ args['fullname'] }}
 {%     endif %}
-{%     if 'groups' in user %}
-    - groups: {{ user['groups'] }}
+{%     if args['groups'] is defined %}
+    - groups: {{ args['groups'] }}
 {%       if pillar['groups'] is defined %}
     - require:
-{%         for group in user['groups'] if group in pillar['groups'] %}
+{%         for group in args['groups'] if group in pillar['groups'] %}
       - group: group_{{ group }}
 {%         endfor %}
 {%       endif %}

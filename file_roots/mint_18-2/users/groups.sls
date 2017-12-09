@@ -1,6 +1,6 @@
 # Manage groups
 
-{% set state_version = '0.0.3' %}
+{% set state_version = '0.0.4' %}
 {% if pillar['groups'] is defined %}
 {%   set pillar_version = pillar['groups'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -13,11 +13,12 @@
 {% if pillar['groups'] is defined %}
 
 {%   for group in pillar['groups'] if not group == 'pillar_version' %}
+{%     set args = pillar['groups'][group] %}
 group_{{ group }}:
   group.present:
     - name: {{ group }}
-{%     if 'gid' in group %}
-    - gid: {{ group['gid'] }}
+{%     if args['gid'] is defined %}
+    - gid: {{ groups['gid'] }}
 {%     endif %}
 {%   endfor %}
 
