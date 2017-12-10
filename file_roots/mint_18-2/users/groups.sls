@@ -1,6 +1,6 @@
 # Manage groups
 
-{% set state_version = '0.0.4' %}
+{% set state_version = '0.0.5' %}
 {% if pillar['groups'] is defined %}
 {%   set pillar_version = pillar['groups'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -22,6 +22,8 @@ group_{{ group }}:
 {%     endif %}
 {%   endfor %}
 
+{%   include "mint_18-2/etckeeper/commit.sls" %}
+
 {% else %}
 notification-groups:
   test.show_notification:
@@ -29,7 +31,6 @@ notification-groups:
 
 {% endif %}
 
-{% include "mint_18-2/etckeeper/commit.sls" %}
 
 # Pillar Example
 # --------------

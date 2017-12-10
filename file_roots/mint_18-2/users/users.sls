@@ -58,14 +58,14 @@ user_{{ user }}:
 {%     endif %}
 {%   endfor %}
 
+{%   include "mint_18-2/etckeeper/commit.sls" %}
+
 {% else %}
 notification-users:
   test.show_notification:
     - text: {{ 'You can define pillar data for this state, for more informations read the example comment for this state in %s.' % sls }}
 
 {% endif %}
-
-{% include "mint_18-2/etckeeper/commit.sls" %}
 
 # Pillar Example
 # --------------
