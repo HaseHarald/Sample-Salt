@@ -1,6 +1,6 @@
 # OpenSSH - OpenBSD Secure Shell server
 
-{% set state_version = '0.0.1' %}
+{% set state_version = '0.0.2' %}
 {% if pillar['openssh'] is defined %}
 {%   set pillar_version = pillar['openssh'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -25,7 +25,7 @@ service-openssh-server:
 
 {% if pillar['openssh'] is defined %}
 
-{% if pillar['openssh']['sshd_config'] is defined %}
+{%   if pillar['openssh']['sshd_config'] is defined %}
 /etc/ssh/sshd_config:
   file.managed:
     - name: /etc/ssh/sshd_config
@@ -33,11 +33,11 @@ service-openssh-server:
     - template: jinja
     - require:
       - pkg: pkg-openssh-server
-{% endif %}
+{%   endif %}
 
-{% if pillar['openssh'].get('ssh_auth') %}
-{% for user in pillar['openssh']['ssh_auth']['user'] %}
-{% for comment in pillar['openssh']['ssh_auth']['user'][user] %}
+{%   if pillar['openssh'].get('ssh_auth') %}
+{%     for user in pillar['openssh']['ssh_auth']['user'] %}
+{%       for comment in pillar['openssh']['ssh_auth']['user'][user] %}
 ssh_auth-{{ user }}-{{ comment }}:
   ssh_auth.present:
     - user: {{ user }}
@@ -45,9 +45,15 @@ ssh_auth-{{ user }}-{{ comment }}:
     - enc: {{ pillar['openssh']['ssh_auth']['user'][user][comment]['enc'] }}
     - comment: {{ comment }}
     - config: {{ pillar['openssh']['ssh_auth'].get('config', '.ssh/authorized_keys') }}
-{% endfor %}
-{% endfor %}
-{% endif %}
+{%         if pillar['users'] is defined %}
+{%           if user in pillar['users'] %}
+    - require:
+      - user: user_{{ user }}
+{%           endif %}
+{%         endif %}
+{%       endfor %}
+{%     endfor %}
+{%   endif %}
 
 {% else %}
 notification-ssh-server:
