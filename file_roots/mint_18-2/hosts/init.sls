@@ -1,14 +1,24 @@
 # Manage entries in /etc/hosts
 
-{% set state_version = '0.0.1' %}
+{% set state_version = '0.0.2' %}
 {% if pillar['hosts'] is defined %}
 {%   set pillar_version = pillar['hosts'].get('pillar_version', 'undefined') %}
 {% else %}
 {%   set pillar_version = 'undefined' %}
 {% endif %}
 {% set etckeeper_watchlist = [
+  'file: /etc/hosts',
   'host: hosts-*'
 ] %}
+
+/etc/hosts:
+  file.prepend:
+    - name: /etc/hosts
+    - header: True
+    - text:
+      - '# =========================================='
+      - '# This file is managed by Salt. Do not edit!'
+      - '# =========================================='
 
 hosts-localhost-default:
   host.present:
