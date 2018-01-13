@@ -152,10 +152,10 @@
 # then smartd will scan for devices.
 # DEVICESCAN may be followed by any desired Directives.
 
-{% if pillar['smartmontools'] is defined -%}
-{% for device in pillar['smartmontools'].get('device_list', []) -%}
+{% if hdd_list|length > 0 -%}
+{%   for device in hdd_list if not device == "sr0" -%}
 /dev/{{ device }} -n standby -H -l error -f -s (S/../.././05|L/../../6/06) -m root -M daily
-{% endfor -%}
+{%   endfor -%}
 {% else -%}
 DEVICESCAN -d removable -n standby -m root -M exec /usr/share/smartmontools/smartd-runner
 {% endif -%}
