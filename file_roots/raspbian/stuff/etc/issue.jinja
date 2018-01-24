@@ -1,0 +1,10 @@
+Raspbian GNU/Linux 9 \n
+{% if pillar['etc-issue'] is defined -%}
+{%   if pillar['etc-issue']['interfaces'] is defined -%}
+{%     for iface in pillar['etc-issue']['interfaces'] -%}
+{{iface}}: \4{% raw %}{{% endraw %}{{iface}}{% raw %}}{% endraw %}
+{%     endfor -%}
+{%   endif -%}
+{% endif -%}
+\l
+
