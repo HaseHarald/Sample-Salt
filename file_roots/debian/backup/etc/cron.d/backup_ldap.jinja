@@ -1,0 +1,11 @@
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+{{ minute }} {{ hour }} {{ dom }}   {{ mon }}  {{ dow }}   root	/usr/local/sbin/backup_ldap.sh > /dev/null
+#
+

@@ -1,0 +1,24 @@
+#!/bin/bash
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+BACKUP_PATH={{ backup_path }}
+SLAPCAT=/usr/sbin/slapcat
+
+nice ${SLAPCAT} -n 0 > ${BACKUP_PATH}/config.ldif
+nice ${SLAPCAT} -n 1 > ${BACKUP_PATH}/{{ domain }}.ldif
+nice ${SLAPCAT} -n 2 > ${BACKUP_PATH}/access.ldif
+chown root:root ${BACKUP_PATH}/*.ldif
+chmod 640 ${BACKUP_PATH}/*.ldif
+
+# The restore process would be something like this:
+#
+# systemctl stop slapd.service
+# mkdir /var/lib/ldap/accesslog
+# slapadd -F /etc/ldap/slapd.d -n 0 -l /export/backup/config.ldif
+# slapadd -F /etc/ldap/slapd.d -n 1 -l /export/backup/main.db.ldif
+# slapadd -F /etc/ldap/slapd.d -n 2 -l /export/backup/access.ldif
+# chown -R openldap:openldap /etc/ldap/slapd.d/
+# chown -R openldap:openldap /var/lib/ldap/
+# systemctl start slapd.service
