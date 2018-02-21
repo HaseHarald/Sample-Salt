@@ -1,0 +1,10 @@
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+#======================= {{ section }} Settings =======================
+[{{ section }}]
+# Configs from pillar
+{% for key, value in pillar['samba']['smb.conf'][section].iteritems() -%}
+    {{ key}} = {{ value }}
+{% endfor -%}

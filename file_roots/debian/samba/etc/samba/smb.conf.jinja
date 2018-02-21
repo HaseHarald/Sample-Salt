@@ -1,0 +1,15 @@
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+#======================= Global Settings =======================
+[global]
+# Configs from pillar
+{% for key, value in pillar['samba']['smb.conf']['global'].iteritems() -%}
+    {{ key}} = {{ value }}
+{% endfor -%}
+
+# Include all sections in from smb.conf.d
+{% for section in pillar['samba']['smb.conf'] if not section == 'global' -%}
+    include = /etc/samba/smb.conf.d/{{ section }}.conf
+{% endfor -%}
