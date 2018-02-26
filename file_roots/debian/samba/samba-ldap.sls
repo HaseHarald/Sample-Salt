@@ -1,6 +1,6 @@
 # Samba-LDAP - LDAP access for smb-server
 
-{% set state_version = '0.2.0' %}
+{% set state_version = '0.2.1' %}
 {% if pillar['samba'] is defined %}
 {%   set pillar_version = pillar['samba'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -102,7 +102,7 @@ smbpasswd-rootDN:
         smbHome: ''
         smbProfile: ''
         logonScript: 'logon.bat'
-        mailDomain: {{ grains['hostname'] }}
+        mailDomain: {{ grains['host'] }}
     - context:
 {%     if pillar['samba']['smbldap-tools']['smbldap.conf']['SID'] is defined %}
         sid: {{ pillar['samba']['smbldap-tools']['smbldap.conf']['SID'] }}

@@ -6,5 +6,5 @@
 [{{ section }}]
 # Configs from pillar
 {% for key, value in pillar['samba']['smb.conf'][section].iteritems() -%}
-    {{ key}} = {{ value }}
+    {{ key }} = {{ value }}
 {% endfor -%}

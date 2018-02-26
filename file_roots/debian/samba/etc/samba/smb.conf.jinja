@@ -6,7 +6,7 @@
 [global]
 # Configs from pillar
 {% for key, value in pillar['samba']['smb.conf']['global'].iteritems() -%}
-    {{ key}} = {{ value }}
+    {{ key }} = {{ value }}
 {% endfor -%}
 
 # Include all sections in from smb.conf.d
