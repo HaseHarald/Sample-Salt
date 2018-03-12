@@ -1,11 +1,12 @@
 # Manage groups
 
-{% set state_version = '0.0.5' %}
+{% set state_version = '0.0.7' %}
 {% if pillar['groups'] is defined %}
 {%   set pillar_version = pillar['groups'].get('pillar_version', 'undefined') %}
 {% else %}
 {%   set pillar_version = 'undefined' %}
 {% endif %}
+{% set os_path = 'raspbian' %}
 {% set etckeeper_watchlist = [
   'group: group_*'
 ] %}
@@ -18,11 +19,11 @@ group_{{ group }}:
   group.present:
     - name: {{ group }}
 {%     if args['gid'] is defined %}
-    - gid: {{ groups['gid'] }}
+    - gid: {{ args['gid'] }}
 {%     endif %}
 {%   endfor %}
 
-{%   include "raspbian/etckeeper/commit.sls" %}
+{% include os_path ~ "/etckeeper/commit.sls" %}
 
 {% else %}
 notification-groups:
@@ -30,7 +31,6 @@ notification-groups:
     - text: {{ 'You can define pillar data for this state, for more informations read the example comment for this state in %s.' % sls }}
 
 {% endif %}
-
 
 # Pillar Example
 # --------------
