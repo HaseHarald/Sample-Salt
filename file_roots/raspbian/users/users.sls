@@ -81,7 +81,7 @@ notification-users:
 #     groups:                             # [optional] list of aditional groups to add the user to
 #       - foobar
 #       - admin
-#     password: TopSecret                 # [optional] defaults to empty. Use 'mkpasswd -m sha-512 -S saltsalt -s' to generate a passwordhash on the commandline.
+#     password: TopSecret                 # [optional] defaults to empty. Use 'mkpasswd -m sha-512 -S saltsalt' to generate a passwordhash on the commandline.
 #     hash_password: True                 # [optional] defaults to False. If False keep password as is, usefull if the password string is allready a hash.
 #     enforce_password: True              # [optional] defaults to False. If True override password, even if allready set.
 # 
