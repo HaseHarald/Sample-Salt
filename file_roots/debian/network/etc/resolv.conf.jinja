@@ -1,0 +1,14 @@
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+{% for server in dns_servers -%}
+nameserver {{ server }}
+{% endfor -%}
+{% if domain is defined -%}
+domain {{ domain }}
+{% endif -%}
+{% if search is defined -%}
+search {{ search }}
+{% endif -%}
+

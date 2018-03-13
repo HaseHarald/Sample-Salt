@@ -1,0 +1,32 @@
+#!/bin/sh -e
+
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+# Called when a new interface comes up
+#
+# don't restart when lo is configured.
+if [ "$IFACE" != "{{ iface }}" ]; then
+    exit 0
+fi
+#
+# Only run from ifup.
+if [ "$MODE" != "start" ]; then
+    exit 0
+fi
+
+{% for name, route in routes.iteritems() -%}
+# Set static route for {{ name }}
+# Add only if route does not exist
+EXIST=`ip route show {{ route.netaddrv4 }}/{{ route.netmaskv4 }} | wc -l`
+if [ $EXIST -eq 0 ]
+then
+{%   if route.gatewayv4 is not defined or route.gatewayv4 == '0.0.0.0' -%}
+    /sbin/ip route add {{ route.netaddrv4 }}/{{ route.netmaskv4 }} dev {{ iface }}
+{%   else -%}
+    /sbin/ip route add {{ route.netaddrv4 }}/{{ route.netmaskv4 }} via {{ route.gatewayv4 }} dev {{ iface }}
+{%   endif -%}
+fi
+{% endfor -%}
+#

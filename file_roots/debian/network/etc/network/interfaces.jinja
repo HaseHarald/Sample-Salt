@@ -1,0 +1,47 @@
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+## This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+{% for name, config in pillar['network']['interfaces'].iteritems() -%}
+{%   if config.comments is defined -%}
+{%     for comment in config.comments -%}
+# {{ comment }}
+{%     endfor -%}
+{%   endif -%}
+{%   if config.auto is defined and config.auto == True -%}
+auto {{ name }}
+{%   endif -%}
+{%   if config.hotplug is defined and config.hotplug == True -%}
+allow-hotplug {{ name }}
+{%   endif -%}
+iface {{ name }} inet {{ config.mode }}
+{%   if config.ipv4addr is defined -%}
+{% raw %}    {% endraw %}address {{ config.ipv4addr }}
+{%   endif -%}
+{%   if config.netmaskv4 is defined -%}
+{% raw %}    {% endraw %}netmask {{ config.netmaskv4 }}
+{%   endif -%}
+{%   if config.gatewayv4 is defined -%}
+{% raw %}    {% endraw %}gateway {{ config.gatewayv4 }}
+{%   endif -%}
+{%   if config.broadcastv4 is defined -%}
+{% raw %}    {% endraw %}broadcast {{ config.broadcastv4 }}
+{%   endif -%}
+{%   if config.bridgev4 is defined -%}
+{% raw %}    {% endraw %}bridge_ports {{ config.bridgev4 }}
+{%   endif -%}
+{%   if pillar['network']['routes'] is defined -%}
+{%     if pillar['network']['routes'][name] is defined -%}
+{% raw %}    {% endraw %}up /etc/network/if-up.d/routes-{{ name }}
+{% raw %}    {% endraw %}down /etc/network/if-down.d/routes-{{ name }}
+{%     endif -%}
+{%   endif -%}
+
+{% endfor -%}
