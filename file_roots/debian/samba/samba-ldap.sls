@@ -173,6 +173,7 @@ smbpasswd-rootDN:
       - cmd: smbldap-populate
 
 {%     if pillar['samba']['smbldap-tools']['smbldap_bind.conf'] is defined %}
+# TODO: ldapsearch: Command not found - This is run every time!
 smbldap-populate:
   cmd.run:
     - name: |
