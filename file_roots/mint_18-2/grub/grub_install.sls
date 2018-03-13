@@ -1,21 +1,22 @@
 # grub - install grub to certain disks
 
-{% set state_version = '0.0.1' %}
+{% set state_version = '0.1.2' %}
 {% if pillar['grub_install'] is defined %}
 {%   set pillar_version = pillar['grub_install'].get('pillar_version', 'undefined') %}
 {% else %}
 {%   set pillar_version = 'undefined' %}
 {% endif %}
+{% set os_path = 'mint_18-2' %}
 {% set etckeeper_watchlist = [] %}
 
 {% if pillar['grub_install'] is defined %}
-{%   for disk in pillar['grub_install'].iteritems() if not user == 'pillar_version' %}
+{%   for disk in salt['pillar.get']('grub_install:disks', []) %}
 cmd_grub_install_{{ disk }}:
   cmd.wait:
-    - name: 'grub-install {{ disk }}
+    - name: 'grub-install {{ disk }}'
     - user: root
     - watch:
-      - sls: mint_18-2.grub
+      - sls: {{ os_path }}.grub
 {%   endfor %}
 
 {% else %}
@@ -26,7 +27,8 @@ notification-grub_install:
 
 # Pillar Example
 # --------------
-# grub:
+# grub_install:
 #   pillar_version: '0.0.1'
-#   /dev/sda
-#   /dev/disk/by-id/foobar
+#   disks:
+#     - /dev/sda
+#     - /dev/disk/by-id/foobar
