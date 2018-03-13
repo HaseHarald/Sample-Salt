@@ -6,19 +6,20 @@
 # Also, unless you set 'save' to 'True', your rules will not be persistent after
 # reboot. While in test_mode, 'save' is 'False' by default.
 
-{% set state_version = '0.0.3' %}
+{% set state_version = '0.1.1' %}
 {% if pillar['firewall'] is defined %}
 {%   set pillar_version = pillar['firewall'].get('pillar_version', 'undefined') %}
 {% else %}
 {%   set pillar_version = 'undefined' %}
 {% endif %}
+{% set os_path = 'raspbian' %}
 {% set etckeeper_watchlist = [
   'file: /etc/cron.d/reset-iptables'
 ] %}
 
 # Install required packages for firewalling      
 include:
-  - raspbian.network.firewalling-pkgs
+  - {{ os_path }}.network.firewalling-pkgs
 
 # Have the netfilter daemon running
 netfilter-persistent.service:
@@ -32,7 +33,7 @@ netfilter-persistent.service:
 /usr/local/sbin/reset_iptables.sh:
   file.managed:
     - name: /usr/local/sbin/reset_iptables.sh
-    - source: salt://raspbian/network/usr/local/sbin/reset_iptables.sh
+    - source: salt://{{ os_path }}/network/usr/local/sbin/reset_iptables.sh
     - user: root
     - group: root
     - mode: 750
@@ -49,7 +50,7 @@ netfilter-persistent.service:
 /etc/cron.d/reset-iptables:
   file.managed:
     - name: /etc/cron.d/reset-iptables
-    - source: salt://raspbian/network//etc/cron.d/reset-iptables
+    - source: salt://{{ os_path }}/network//etc/cron.d/reset-iptables
     - user: root
     - group: root
     - mode: 644
@@ -156,6 +157,9 @@ add_custom_filter_rule_{{ comment }}:
   iptables.append:
     - table: filter
     - chain: {{ chain }}
+{%         if rule['position'] is defined %}
+    - position: {{ rule['position'] }}
+{%         endif %}
 {%         if rule['source'] is defined %}
     - source: {{ rule['source'] }}
 {%         endif %}
@@ -192,6 +196,9 @@ add_custom_filter_rule_{{ comment }}:
       - iptables: allow_established_INPUT
       - iptables: allow_established_FORWARD
 {%         endif %}
+{%         for prereq in rule.get('after', []) %}
+      - iptables: add_custom_filter_rule_{{ prereq }}
+{%         endfor %}
 {%       endfor %}
 {%     endfor %}
 {%   endif %}
@@ -203,7 +210,7 @@ notification-firewall:
 
 {% endif %}
 
-{% include "raspbian/etckeeper/commit.sls" %}
+{% include os_path ~ "/etckeeper/commit.sls" %}
 
 # Pillar Example
 # --------------
@@ -224,6 +231,7 @@ notification-firewall:
 #       # give the rule a name
 #       http_global:
 #         # and define the params
+#         position: 23
 #         source: '0.0.0.0/0'
 #         dport: 80
 #         proto: tcp
@@ -233,6 +241,7 @@ notification-firewall:
 #         # them make sense in this example.
 #         # All but 'jump' are kind of optional. Offcourse, no other arguments
 #         # would be kind of pointless.
+#         position: 42
 #         source: '192.168.1.42'
 #         siface: enp0s3
 #         sport: '1025:65535'
@@ -243,6 +252,8 @@ notification-firewall:
 #         match: 'conntrack'
 #         ctstate: 'NEW'
 #         jump: 'REJECT'
+#         after:
+#           - 'http_global'
 #
 #     FORWARD:
 #       # Just have a sample for a different chain
