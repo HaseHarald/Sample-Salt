@@ -1,6 +1,6 @@
 # OpenLDAP - Lightweight Directory Access Protocol Server
 
-{% set state_version = '0.1.5' %}
+{% set state_version = '0.1.7' %}
 {% if pillar['ldap'] is defined %}
 {%   set pillar_version = pillar['ldap'].get('pillar_version', 'undefined') %}
 {% else %}
@@ -100,8 +100,8 @@ pillar-test-ldap-slapd:
     - name: ldap_pillar-test-ldap-slapd
 {% endif %}
 
-include:
 {% if pillar['ldap']['schema'] is defined %}
+include:
 {%   for schema in pillar['ldap']['schema'] %}
   - {{ os_path }}.ldap.schema.{{ schema }}
 {%   endfor %}
@@ -150,8 +150,18 @@ notification-sldapd:
 #   # For details on hwo to configure those schemas that do need configuration, look at the statefile of the specified schema.
 #   # This whole section and all of its schemas are optional.
 #   schema:
+#     CORBA:
 #     logging:
 #       log-level: 'parse shell config'
-#     CORBA:
+#     memberOf:
 #     ou_UsersGroups:
+#     referential_integrity:
 #     samba:
+#       users_dn: 'ou=Users' # Optional, Defaults to "ou=Users" - The Relative Distinguished Name of the users node
+#       groups_dn: 'ou=Groups' # Optional, Defaults to "ou=Groups" - The RDN of the groups node
+#       computers_dn: 'ou=Computers' # Optional, Default to "ou=Computers" - The RDN of the machines node
+#       idmap_dn: 'ou=Idmap' # Optional, Defaults to "ou=Idmap" - The RDN for the Idmap
+#       sambaDomain: 'samba' # Optional, Defaults to 'samba' - The samba domain name
+#       sambaSID: 'S-1-2-34-5678901234-567890123-4567890123' # The SID of the samba system. To obtain this number do: "net getlocalsid" on the samba-host.
+# 
+# 

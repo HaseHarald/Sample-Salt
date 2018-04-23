@@ -1,0 +1,34 @@
+# ==========================================
+# This file is managed by Salt. Do not edit!
+# ==========================================
+
+dn: {{ salt['pillar.get']('ldap:base_dn') }}
+objectClass: dcObject
+objectClass: organization
+dc: {{ salt['pillar.get']('ldap:base_dn').split('=')[1].split(',')[0] }}
+o: {{ salt['pillar.get']('ldap:base_dn').split('=')[1].split(',')[0] }}
+
+dn: {{ salt['pillar.get']('ldap:schema:samba:users_dn', 'ou=Users') }},{{ salt['pillar.get']('ldap:base_dn') }}
+objectClass: organizationalUnit
+ou: {{ salt['pillar.get']('ldap:schema:samba:users_dn', 'ou=Users').split('=')[1].split(',')[0] }}
+
+dn: {{ salt['pillar.get']('ldap:schema:samba:groups_dn', 'ou=Groups') }},{{ salt['pillar.get']('ldap:base_dn') }}
+objectClass: organizationalUnit
+ou: {{ salt['pillar.get']('ldap:schema:samba:groups_dn', 'ou=Groups').split('=')[1].split(',')[0] }}
+
+dn: {{ salt['pillar.get']('ldap:schema:samba:computers_dn', 'ou=Computers') }},{{ salt['pillar.get']('ldap:base_dn') }}
+objectClass: organizationalUnit
+ou: {{ salt['pillar.get']('ldap:schema:samba:computers_dn', 'ou=Computers').split('=')[1].split(',')[0] }}
+
+dn: {{ salt['pillar.get']('ldap:schema:samba:idmap_dn', 'ou=Idmap') }},{{ salt['pillar.get']('ldap:base_dn') }}
+objectClass: organizationalUnit
+ou: {{ salt['pillar.get']('ldap:schema:samba:idmap_dn', 'ou=Idmap').split('=')[1].split(',')[0] }}
+
+dn: sambaDomainName={{ salt['pillar.get']('ldap:schema:samba:sambaDomain', 'samba') }},{{ salt['pillar.get']('ldap:base_dn') }}
+objectClass: sambaDomain
+objectClass: sambaUnixIdPool
+sambaDomainName: {{ salt['pillar.get']('ldap:schema:samba:sambaDomain', 'samba') }}
+sambaSID: {{ salt['pillar.get']('ldap:schema:samba:sambaSID') }}
+sambaNextRid: {{ salt['pillar.get']('ldap:schema:samba:midstart', '10000') }}
+uidNumber: {{ salt['pillar.get']('ldap:schema:samba:uidstart', '10000') }}
+gidNumber: {{ salt['pillar.get']('ldap:schema:samba:gidstart', '10000') }}
