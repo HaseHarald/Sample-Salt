@@ -93,9 +93,6 @@ notification-smb-server:
 #   # interested in using this part of the pillar. If set, smbldap-tools will be
 #   # installed, configured and connected to the specified LDAP-Server.
 #   smbldap-tools:
-#     uidstart: 10000 # Optional, Defaults to 10000 - The UID to start with when adding new samba-users
-#     gidstart: 10000 # Optional, Defaults to 10000 - The GID to start with when adding new groups through samba
-#     midstart: 20000 # Optional, Defaults to 10000 - The MID to start with when adding new machines to samba
 #     smbldap.conf:
 #       SID: 'S-1-5-21-2092326337-827323919-3161327660' # Optional, Defaults to new generated SID - The SID this samba server should use
 #       sambaDomain: 'sampledomain' # Optional, Defaults to empty string / whatever is configured in smb.conf - The domain name of samba

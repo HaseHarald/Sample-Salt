@@ -25,20 +25,6 @@
 
 {%   set useTLS = 1 %}
 
-{%   set uidstart = 10000 %}
-{%   set gidstart = 10000 %}
-{%   set midstart = 10000 %}
-
-{%   if pillar['samba']['smbldap-tools']['uidstart'] is defined %}
-{%     set uidstart = pillar['samba']['smbldap-tools']['uidstart'] %}
-{%   endif %}
-{%   if pillar['samba']['smbldap-tools']['gidstart'] is defined %}
-{%     set gidstart = pillar['samba']['smbldap-tools']['gidstart'] %}
-{%   endif %}
-{%   if pillar['samba']['smbldap-tools']['midstart'] is defined %}
-{%     set midstart = pillar['samba']['smbldap-tools']['midstart'] %}
-{%   endif %}
-
 {%   if pillar['samba']['smbldap-tools']['smbldap_bind.conf'] is defined %}
 /etc/smbldap-tools/smbldap_bind.conf:
   file.managed:
@@ -169,25 +155,7 @@ smbpasswd-rootDN:
     - require:
       - pkg: pkg-smbldap-tools
       - pkg: pkg-samba
-    - listen_in:
-      - cmd: smbldap-populate
 
-{%     if pillar['samba']['smbldap-tools']['smbldap_bind.conf'] is defined %}
-# TODO: ldapsearch: Command not found - This is run every time!
-smbldap-populate:
-  cmd.run:
-    - name: |
-        (echo {{ pillar['samba']['smbldap-tools']['smbldap_bind.conf']['masterPW'] }}; echo {{ pillar['samba']['smbldap-tools']['smbldap_bind.conf']['masterPW'] }}) | \
-        smbldap-populate -u {{ uidstart }} -g {{ gidstart }} -r {{ midstart }}
-    - unless: |
-        ldapsearch -LLL -H {{ pillar['samba']['smbldap-tools']['smbldap.conf']['masterLDAP'] }} -D {{ pillar['samba']['smbldap-tools']['smbldap_bind.conf']['masterDN'] }} -w {{ pillar['samba']['smbldap-tools']['smbldap_bind.conf']['masterPW'] }} -b {{ pillar['samba']['smbldap-tools']['smbldap.conf']['base_dn'] }} | \
-        grep 'sambaDomainName: {{ pillar['samba']['smbldap-tools']['smbldap.conf']['sambaDomain'] }}'
-    - require:
-      - pkg: smbldap-tools
-      - file: /etc/smbldap-tools/smbldap_bind.conf
-      - file: /etc/smbldap-tools/smbldap.conf
-
-{%     endif %}
 {%   endif %}
 {% endif %}
 
