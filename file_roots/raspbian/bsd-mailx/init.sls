@@ -1,0 +1,1 @@
+../../debian/bsd-mailx/init.sls
